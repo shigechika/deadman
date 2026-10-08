@@ -935,6 +935,8 @@ def pingcmd(osname, ipv):
         if ipv == 6:
             if which('ping6'): return ["ping6", "-c", "1"]
             else: return ["ping", "-c", "1"]
+    elif osname == "JUNOS":
+        return ["ping", "count", "1"]
 
     return None
 
@@ -973,7 +975,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--scale", type = int, default = 10,
                         help = "scale of ping RTT bar gap, default 10 (ms)")
-    async_group = parser.add_argument_group('asynchronously')
+    async_group = parser.add_argument_group('async')
     async_group.add_argument("-a", "--async-mode", action = "store_true",
                         help = "send ping asynchronously")
     parser.add_argument("-b", "--blink-arrow", action = "store_true",
@@ -983,7 +985,7 @@ if __name__ == '__main__':
     parser.add_argument("configfile", type = argparse.FileType("r"),
                         help = "config file for deadman")
     async_group.add_argument("-t", "--timeline", action = "store_true", 
-                        help = "display timeline every 10 seconds")
+                        help = "display timeline every 10/60 seconds with async")
 
     args = parser.parse_args()
     RTT_SCALE = args.scale
